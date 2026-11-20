@@ -713,6 +713,10 @@ void TypeSupport::register_type_object_representation()
     return;
   }
 
+  // The Fast DDS registry is shared by all participants. Keep the lookup and
+  // registration of the whole type (including nested members) together.
+  static std::mutex type_registry_mutex;
+  std::lock_guard<std::mutex> lock(type_registry_mutex);
   if (type_support_intro->typesupport_identifier ==
     rosidl_typesupport_introspection_c__identifier)
   {
